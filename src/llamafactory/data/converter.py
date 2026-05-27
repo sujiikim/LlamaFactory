@@ -127,6 +127,7 @@ class AlpacaDatasetConverter(DatasetConverter):
             "_images": self._find_medias(example[self.dataset_attr.images]) if self.dataset_attr.images else None,
             "_videos": self._find_medias(example[self.dataset_attr.videos]) if self.dataset_attr.videos else None,
             "_audios": self._find_medias(example[self.dataset_attr.audios]) if self.dataset_attr.audios else None,
+            "_learn_type": example.get(self.dataset_attr.learn_type) if self.dataset_attr.learn_type else None,
         }
         return output
 
@@ -223,6 +224,7 @@ class SharegptDatasetConverter(DatasetConverter):
             "_images": self._find_medias(example[self.dataset_attr.images]) if self.dataset_attr.images else None,
             "_videos": self._find_medias(example[self.dataset_attr.videos]) if self.dataset_attr.videos else None,
             "_audios": self._find_medias(example[self.dataset_attr.audios]) if self.dataset_attr.audios else None,
+            "_learn_type": example.get(self.dataset_attr.learn_type) if self.dataset_attr.learn_type else None,
         }
         return output
 
@@ -257,8 +259,8 @@ class OpenAIDatasetConverter(DatasetConverter):
             content = message[self.dataset_attr.content_tag]
 
             if role in [self.dataset_attr.assistant_tag, self.dataset_attr.function_tag]:
-                if tool_calls := message.get("tool_calls"):
-                    tool_calls_list = [tool["function"] for tool in tool_calls]
+                if "tool_calls" in message and len(message["tool_calls"]) > 0:
+                    tool_calls_list = [tool["function"] for tool in message["tool_calls"]]
                     content = json.dumps(tool_calls_list, ensure_ascii=False)
                     role = self.dataset_attr.function_tag
 
@@ -363,6 +365,7 @@ class OpenAIDatasetConverter(DatasetConverter):
             "_images": self._find_medias(example[self.dataset_attr.images]) if self.dataset_attr.images else None,
             "_videos": self._find_medias(example[self.dataset_attr.videos]) if self.dataset_attr.videos else None,
             "_audios": self._find_medias(example[self.dataset_attr.audios]) if self.dataset_attr.audios else None,
+            "_learn_type": example.get(self.dataset_attr.learn_type) if self.dataset_attr.learn_type else None,
         }
         return output
 

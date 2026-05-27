@@ -178,6 +178,12 @@ def _get_merged_dataset(
         if (stage == "rm" and dataset_attr.ranking is False) or (stage != "rm" and dataset_attr.ranking is True):
             raise ValueError("The dataset is not applicable in the current training stage.")
 
+        if data_args.label_dynamic and dataset_attr.learn_type is None:
+            raise ValueError(
+                f"Dataset `{dataset_name}` does not have a `learn_type` column mapping, "
+                "which is required when `label_dynamic` is enabled."
+            )
+
         datasets[dataset_name] = _load_single_dataset(dataset_attr, model_args, data_args, training_args)
 
     if return_dict:

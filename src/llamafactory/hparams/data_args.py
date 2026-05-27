@@ -55,6 +55,16 @@ class DataArguments:
         default=False,
         metadata={"help": "Whether or not to mask the history and train on the last turn only."},
     )
+    label_dynamic: bool = field(
+        default=False,
+        metadata={
+            "help": (
+                "Whether to dynamically apply label masking per example based on the `learn_type` field in the dataset. "
+                "Valid learn_type values: learn_action, learn_param, learn_full. "
+                "Supported for SFT, DPO, and RM."
+            )
+        },
+    )
     streaming: bool = field(
         default=False,
         metadata={"help": "Enable dataset streaming."},
@@ -181,6 +191,9 @@ class DataArguments:
 
         if self.mask_history and self.train_on_prompt:
             raise ValueError("`mask_history` is incompatible with `train_on_prompt`.")
+
+        if self.label_dynamic and (self.action_only or self.toolcall_only):
+            raise ValueError("`label_dynamic` is incompatible with `action_only` and `toolcall_only`.")
 
         if self.neat_packing:
             self.packing = True

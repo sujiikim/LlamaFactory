@@ -1350,6 +1350,19 @@ register_template(
 
 
 register_template(
+    name="opencua",
+    format_user=StringFormatter(
+        slots=["<|im_user|>user<|im_middle|>{{content}}<|im_end|><|im_assistant|>assistant<|im_middle|>"]
+    ),
+    format_assistant=StringFormatter(slots=["{{content}}<|im_end|>"]),
+    format_system=StringFormatter(slots=["<|im_system|>system<|im_middle|>{{content}}<|im_end|>"]),
+    default_system="You are a helpful assistant",
+    stop_words=["<|im_end|>"],
+    mm_plugin=get_mm_plugin("opencua", image_token="<|media_placeholder|>"),
+)
+
+
+register_template(
     name="lfm2",
     format_user=StringFormatter(slots=["<|im_start|>user\n{{content}}<|im_end|>\n<|im_start|>assistant\n"]),
     format_assistant=StringFormatter(slots=["{{content}}<|im_end|>\n"]),
@@ -1701,17 +1714,6 @@ register_template(
     stop_words=["<|im_end|>"],
     default_system="You are a helpful assistant.",
     mm_plugin=get_mm_plugin(name="minicpm_v", image_token="<image>", video_token="<video>"),
-)
-
-
-register_template(
-    name="minicpm_v_4_6",
-    format_user=StringFormatter(slots=["<|im_start|>user\n{{content}}<|im_end|>\n<|im_start|>assistant\n"]),
-    format_assistant=StringFormatter(slots=["{{content}}<|im_end|>\n"]),
-    format_system=StringFormatter(slots=["<|im_start|>system\n{{content}}<|im_end|>\n"]),
-    stop_words=["<|im_end|>"],
-    default_system="You are a helpful assistant.",
-    mm_plugin=get_mm_plugin(name="minicpm_v_4_6", image_token="<image>", video_token="<video>"),
 )
 
 
